@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bali Snack AI — Jajanan Khas Bali</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#"><span class="brand-icon">🌺</span> Bali Snack <b>AI</b></a>
+  <nav><a href="#produk">Katalog</a><a href="#asisten">Asisten AI</a><a href="#promosi">Promosi UMKM</a></nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">RASA LOKAL · CERITA BALI</span>
+      <h1>Temukan camilan,<br><em>temukan rasa Bali.</em></h1>
+      <p>Jajanan ringan khas Bali, rekomendasi pintar, dan alat promosi sederhana untuk membantu UMKM berkembang.</p>
+      <div class="hero-actions"><a class="btn primary" href="#produk">Jelajahi Produk <span>↗</span></a><a class="btn ghost" href="#asisten">Tanya Asisten AI</a></div>
+      <div class="hero-note"><span>✦</span> Mendukung UMKM dan cita rasa Nusantara</div>
+    </div>
+    <div class="hero-art">
+      <div class="sun"></div><div class="hero-emoji">🥧</div>
+      <div class="floating f1">🌴 Bali, dalam setiap gigitan</div>
+      <div class="floating f2">♡ Pilihan lokal</div>
+      <div class="art-caption"><small>REKOMENDASI HARI INI</small><strong>Pie Susu Bali</strong><span>Manis · Lembut · Ikonik</span></div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div><strong>6+</strong><span>Contoh jajanan</span></div><div><strong>100%</strong><span>Semangat lokal</span></div><div><strong>AI</strong><span>Asisten rekomendasi</span></div>
+  </section>
+
+  <section id="produk" class="section">
+    <div class="section-heading"><div><span class="eyebrow">KATALOG PILIHAN</span><h2>Jajanan favorit</h2><p>Temukan camilan untuk menemani hari atau dijadikan buah tangan.</p></div>
+      <input id="search" class="search" type="search" placeholder="Cari jajanan..." aria-label="Cari jajanan">
+    </div>
+    <div class="chips"><button class="chip active" data-category="Semua">Semua</button><button class="chip" data-category="Kue">Kue</button><button class="chip" data-category="Kue Tradisional">Kue tradisional</button><button class="chip" data-category="Camilan">Camilan</button></div>
+    <div class="product-grid" id="productGrid">
+      {% for p in products %}
+      <article class="product-card" data-name="{{ p.name|lower }}" data-category="{{ p.category }}">
+        <div class="product-visual visual-{{ loop.index }}"><span class="product-emoji">{{ p.emoji }}</span><span class="tag">{{ p.tag }}</span><button class="add-btn" data-id="{{ p.id }}" aria-label="Tambah {{ p.name }}">+</button></div>
+        <div class="product-info"><span class="category">{{ p.category }}</span><h3>{{ p.name }}</h3><p>{{ p.description }}</p><div class="product-bottom"><strong>Rp{{ "{:,.0f}".format(p.price).replace(",", ".") }}</strong><button class="text-btn add-text" data-id="{{ p.id }}">Tambah ke keranjang ↗</button></div></div>
+      </article>
+      {% endfor %}
+    </div>
+    <p id="emptyState" class="empty" hidden>Produk tidak ditemukan. Coba kata kunci lain.</p>
+    <div class="cart-bar"><div><span class="cart-icon">🛍️</span><span><strong>Keranjang demo</strong><small id="cartSummary">Belum ada produk dipilih</small></span></div><strong id="cartTotal">Rp0</strong><button class="btn primary" id="checkout">Lihat pesanan</button></div>
+  </section>
+
+  <section id="asisten" class="section ai-section">
+    <div class="ai-intro"><span class="eyebrow">ASISTEN DIGITAL</span><h2>Kenalan dengan<br><em>AI Jajanan Bali.</em></h2><p>Bingung memilih? Tanyakan rekomendasi berdasarkan selera, anggaran, atau kebutuhan oleh-oleh.</p>
+      <div class="suggestions"><button class="suggestion">Rekomendasi oleh-oleh</button><button class="suggestion">Camilan yang gurih</button><button class="suggestion">Pilihan yang hemat</button></div>
+    </div>
+    <div class="chat-card">
+      <div class="chat-header"><div class="bot-avatar">✦</div><div><strong>Asisten Bali Snack</strong><small><span class="online"></span> Siap membantu</small></div><span class="sparkle">✧</span></div>
+      <div class="chat-messages" id="chatMessages"><div class="message bot">Om Swastyastu! 🌺 Saya asisten demo Bali Snack AI. Saya bisa membantu memilih jajanan atau membuat ide promosi. Ada yang ingin Anda cari?</div></div>
+      <form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Tanya tentang jajanan Bali..." autocomplete="off" required><button aria-label="Kirim pesan" type="submit">↑</button></form>
+      <small class="disclaimer">Asisten menggunakan aturan respons lokal, bukan model AI generatif eksternal.</small>
+    </div>
+  </section>
+
+  <section id="promosi" class="section promo-section">
+    <div><span class="eyebrow">UNTUK PELAKU UMKM</span><h2>Promosi lebih mudah,<br><em>mulai dari sini.</em></h2><p>Buat draf caption media sosial untuk produk Anda. Periksa kembali informasi sebelum dipublikasikan.</p></div>
+    <form id="promoForm" class="promo-card">
+      <label>Nama produk<input id="promoProduct" placeholder="Contoh: Kacang Disco Pedas" required></label>
+      <div class="form-row"><label>Platform<select id="platform"><option>Instagram</option><option>Facebook</option><option>WhatsApp</option><option>TikTok</option></select></label><label>Gaya bahasa<select id="tone"><option value="hangat">Hangat</option><option value="ceria">Ceria</option><option value="formal">Formal</option></select></label></div>
+      <button class="btn primary full" type="submit">✨ Buat caption</button>
+      <div id="promoResult" class="promo-result" hidden><div class="result-top"><strong>Draft caption</strong><button type="button" id="copyCaption" class="text-btn">Salin teks</button></div><pre id="captionText"></pre></div>
+    </form>
+  </section>
+</main>
+<footer><a class="brand" href="#"><span class="brand-icon">🌺</span> Bali Snack <b>AI</b></a><span>Demo website untuk promosi UMKM jajanan khas Bali.</span><a href="#top">Kembali ke atas ↑</a></footer>
+<div id="toast" class="toast" role="status"></div>
+<script>
+const products = {{ products|tojson }};
+const cart = {};
+const fmt = n => 'Rp' + n.toLocaleString('id-ID');
+const toast = (text) => { const el=document.getElementById('toast'); el.textContent=text; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2200); };
+
+function updateCart(){
+  const count=Object.values(cart).reduce((a,b)=>a+b,0);
+  const total=products.reduce((sum,p)=>sum+p.price*(cart[p.id]||0),0);
+  document.getElementById('cartSummary').textContent=count ? `${count} item dipilih` : 'Belum ada produk dipilih';
+  document.getElementById('cartTotal').textContent=fmt(total);
+}
+document.querySelectorAll('.add-btn,.add-text').forEach(btn=>btn.addEventListener('click',()=>{
+  const id=Number(btn.dataset.id); cart[id]=(cart[id]||0)+1; updateCart();
+  const p=products.find(x=>x.id===id); toast(`${p.name} ditambahkan`);
+}));
+document.getElementById('checkout').addEventListener('click',()=>{
+  const chosen=products.filter(p=>cart[p.id]).map(p=>`${p.name} × ${cart[p.id]} — ${fmt(p.price*cart[p.id])}`);
+  if(!chosen.length){toast('Pilih produk terlebih dahulu.');return;}
+  alert('RINGKASAN PESANAN DEMO\\n\\n'+chosen.join('\\n')+'\\n\\nTotal: '+fmt(products.reduce((s,p)=>s+p.price*(cart[p.id]||0),0))+'\\n\\nIni simulasi, belum mengirim pesanan ke penjual.');
+});
+let activeCategory='Semua';
+function filterProducts(){
+  const q=document.getElementById('search').value.toLowerCase(); let visible=0;
+  document.querySelectorAll('.product-card').forEach(card=>{
+    const ok=(activeCategory==='Semua'||card.dataset.category===activeCategory)&&card.dataset.name.includes(q);
+    card.hidden=!ok; if(ok)visible++;
+  });
+  document.getElementById('emptyState').hidden=visible>0;
+}
+document.getElementById('search').addEventListener('input',filterProducts);
+document.querySelectorAll('.chip').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');activeCategory=btn.dataset.category;filterProducts();
+}));
+function addMessage(text,who){const el=document.createElement('div');el.className='message '+who;el.textContent=text;const box=document.getElementById('chatMessages');box.appendChild(el);box.scrollTop=box.scrollHeight;}
+async function askAI(message){
+  addMessage(message,'user');
+  try{const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});const data=await res.json();addMessage(data.reply,'bot');}
+  catch(e){addMessage('Maaf, terjadi kendala. Silakan coba lagi.','bot');}
+}
+document.getElementById('chatForm').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('chatInput');const text=input.value.trim();if(text){input.value='';askAI(text);}});
+document.querySelectorAll('.suggestion').forEach(btn=>btn.addEventListener('click',()=>askAI(btn.textContent)));
+document.getElementById('promoForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const res=await fetch('/api/promo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:document.getElementById('promoProduct').value,platform:document.getElementById('platform').value,tone:document.getElementById('tone').value})});
+  const data=await res.json();document.getElementById('captionText').textContent=data.caption;document.getElementById('promoResult').hidden=false;
+});
+document.getElementById('copyCaption').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.getElementById('captionText').textContent);toast('Caption disalin.');}catch(e){toast('Salin caption secara manual.');}});
+</script>
+</body>
+</html>
